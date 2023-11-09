@@ -1,0 +1,53 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block cart_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box-element">
+                <a class="btn btn-outline-dark" href="{% url 'home' %}">&#x2190; Tiếp tục mua sắm</a>
+                <br><br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>
+                                <div class="cart-item">
+                                    <img src="{{ item.product.ImageURL }}" alt="{{ item.product.name }}" class="cart-item-image" width="200" height="200">
+                                    <span class="cart-item-name">{{ item.product.name }}</span>
+                                </div>
+                            </td>
+                            <td>${{ item.product.price }}</td>
+                            <td>
+                                <div class="quantity">
+                                    <span class="cart-item-quantity">{{ item.quantity }}</span>
+                                    <img data-product={{item.product.id}} data-action = 'add' class="chg-quantity update-cart" src="{% static 'app/images/arrow-up.png' %}" width="10" height="10">
+                                    <img data-product={{item.product.id}} data-action = 'remove' class="chg-quantity update-cart" src="{% static 'app/images/arrow-down.png' %}" width="10" height="10">
+                                </div>
+                            </td>
+                            <td>${{ item.get_total}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="cart-summary">
+                <h5>Total Items: <strong>{{ order.get_cart_items }}</strong></h5>
+                <h5>Cart Total: <strong>${{ order.get_cart_total }}</strong></h5>
+                <a class="btn btn-success" href="{% url 'checkout' %}">Đi đến thanh toán</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock cart_content %}
+

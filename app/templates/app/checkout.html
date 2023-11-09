@@ -1,0 +1,82 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content_checkout %}
+     <div class="row">
+		<div class="col-lg-6">
+			<div class="box-element" id="form-wrapper">
+				<form id="form">
+					<div id="user-info">
+						<div class="form-field">
+							<input required class="form-control" type="text" name="name" placeholder="Họ tên">
+						</div>
+						<div class="form-field">
+							<input required class="form-control" type="email" name="email" placeholder="Email..">
+						</div>
+					</div>
+					
+					<div id="shipping-info">
+						<hr>
+						<p>Thông tin thanh toán:</p>
+						<hr>
+						<div class="form-field">
+							<input class="form-control" type="text" name="address" placeholder="Số nhà">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="city" placeholder="Quận/Xã">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="state" placeholder="Tỉnh/Thành phố">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+						</div>
+						<div class="form-field">
+							<input class="form-control" type="text" name="country" placeholder="Zip code..">
+						</div>
+					</div>
+
+					<hr>
+					<input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
+				</form>
+			</div>
+
+			<br>
+			<div class="box-element hidden" id="payment-info">
+				<small>Paypal Options</small>
+			</div>
+			
+		</div>
+
+		<div class="col-lg-6">
+			<div class="box-element">
+				<a class="btn btn-outline-dark" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+				<hr>
+				<h3>Danh sách giỏ hàng</h3>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Hình ảnh</th>
+							<th>Tên sản phẩm</th>
+							<th>Số lượng</th>
+							<th>Giá cả</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in items %}
+						<tr>
+							<td><img class="row-image" src="{{ item.product.ImageURL }}" width="70" height="70"></td>
+							<td>{{ item.product.name }}</td>
+							<td>{{ item.quantity }}</td>
+							<td>${{ item.get_total }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<h5>Tổng sản phẩm: {{ order.get_cart_items }}</h5>
+				<h5>Tổng bill: ${{ order.get_cart_total }}</h5>
+			</div>
+		</div>
+</div>
+
+	</div>
+{% endblock content_checkout %}

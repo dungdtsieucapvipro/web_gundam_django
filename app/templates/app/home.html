@@ -1,0 +1,123 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block banner_slider %}
+<style>
+    /* styles.css */
+
+    /* Định dạng nút chuyển trang */
+    .carousel-control-prev,
+    .carousel-control-next {
+        background-color: white; /* Màu nền trắng */
+        width: 50px; /* Độ rộng của nút */
+        height: 50px; /* Chiều cao của nút */
+        border-radius: 10px; /* Bo góc nhẹ */
+        position: absolute; /* Đặt vị trí tuyệt đối để điều chỉnh vị trí */
+        top: 50%; /* Đặt top ở giữa */
+        transform: translateY(-50%); /* Dịch chuyển nút lên trên 50% của chính nó */
+        display: flex; /* Sử dụng flexbox để căn giữa nội dung bên trong */
+        justify-content: center; /* Căn giữa theo chiều ngang */
+        align-items: center; /* Căn giữa theo chiều dọc */
+        transition: opacity 0.5s ease; /* Hiệu ứng hiển thị mượt mà */
+    }
+
+    /* Định dạng màu và kích thước của mũi tên (kích thước và màu trắng) */
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: black; /* Màu mũi tên trắng */
+        width: 20px; /* Độ rộng của mũi tên */
+        height: 20px; /* Chiều cao của mũi tên */
+        border-radius: 50%; /* Chuyển mũi tên thành hình tròn */
+    }
+
+    /* Hiệu ứng khi hover */
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+        background-color: rgba(255, 255, 255, 0.8); /* Độ trong suốt khi hover */
+    }
+
+</style>
+<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
+            aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="4" aria-label="Slide 5"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="10000">
+            <img src="{% static 'app/images/banner/gundam4.jpg' %}" class="d-block w-100" alt="Slide 1">
+        </div>
+        <div class="carousel-item" data-bs-interval="2000">
+            <img src="{% static 'app/images/banner/gundam2.jpg' %}" class="d-block w-100" alt="Slide 2">
+        </div>
+        <div class="carousel-item" data-bs-interval="2000">
+            <img src="{% static 'app/images/banner/gundam3.jpg' %}" class="d-block w-100" alt="Slide 3">
+        </div>
+        <div class="carousel-item" data-bs-interval="2000">
+            <img src="{% static 'app/images/banner/gundam1.jpg' %}" class="d-block w-100" alt="Slide 4">
+        </div>
+        <div class="carousel-item" data-bs-interval="2000">
+            <img src="{% static 'app/images/banner/gundam5.jpg' %}" class="d-block w-100" alt="Slide 5">
+        </div>
+        
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<script>
+    const carousel = document.getElementById("carouselExampleDark");
+    const prevButton = document.querySelector(".carousel-control-prev");
+    const nextButton = document.querySelector(".carousel-control-next");
+
+    let hideButtonsTimeout;
+
+    carousel.addEventListener("mouseover", () => {
+        prevButton.style.opacity = "1";
+        nextButton.style.opacity = "1";
+        clearTimeout(hideButtonsTimeout);
+    });
+
+    carousel.addEventListener("mouseleave", () => {
+        hideButtonsTimeout = setTimeout(() => {
+            prevButton.style.opacity = "0";
+            nextButton.style.opacity = "0";
+        }, 2000); // Ẩn nút sau 2 giây khi không có lăn chuột
+    });
+</script>
+</div>
+
+{% endblock banner_slider %}
+{% block main-content %}
+<div class="col-lg-12" style="text-align: center;">
+    <h1 style="color: black;">"THIS IS NOT A TOY"</h1>
+    <h1 style="color: black;">--ĐÂY LÀ MÔ HÌNH--</h1>
+    <img src="{% static 'app/images/gunpla_icon.png' %}" alt="ban_terror" width="80" height="80">
+</div>
+
+<div class="row">
+    {% for product in products %}
+        <div class="col-lg-3">
+            <div class="card">
+                <img class="card-img-top" src="{{ product.ImageURL }}" alt="{{ product.name }}" width="400" height="400">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <hr>
+                    <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Thêm vào giỏ</button>
+                    <a class="btn btn-outline-success" href="#">Xem</a>
+                    <h4 class="card-text" style="float: right"><strong>${{ product.price | floatformat:2 }}</strong></h4>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock main-content %}
