@@ -7,6 +7,36 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 # Create your views here.
 
+def detail(request):
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer =customer,complete =False)
+        items= order.orderitem_set.all()
+    else:
+        items= []
+        order = {'get_cart_items':0,'get_cart_total':0}
+    id = request.GET.get('id','')
+    products = Product.objects.filter(id= id)
+    categories = Category.objects.filter(is_sub =False)
+    context= {'products':products,'categories':categories,'items':items,'order':order}
+    return render(request,'app/detail.html', context)
+
+def category(request):
+    categories = Category.objects.filter(is_sub=False)
+    active_category = request.GET.get('category', '')
+    products = None  # Khai báo biến products với giá trị mặc định là None
+
+    if active_category:
+        products = Product.objects.filter(category__slug=active_category)
+    
+    # Đảm bảo rằng products luôn được khai báo trong mọi trường hợp
+    # if products is None:
+    #     products = Product.objects.all()
+    
+    context = {'categories': categories, 'products': products, 'active_category': active_category}
+    return render(request, 'app/category.html', context)
+
+
 def search(request):
     if request.method == "POST":
         searched = request.POST["searched"]
@@ -39,6 +69,7 @@ def register(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('login')
     context = {'form':form}
     return render(request, 'app/register.html',context)
 
@@ -52,9 +83,9 @@ def home(request):
         items= []
         order = {'get_cart_items':0,'get_cart_total':0}
         cartItems = order['get_cart_items']
-
+    categories = Category.objects.filter(is_sub =False)
     products = Product.objects.all()
-    context= {'products' : products,'cartItems':cartItems}
+    context= {'categories':categories,'products':products,'cartItems':cartItems}
     return render(request, 'app/home.html', context)
 def cart(request):
     if request.user.is_authenticated:
@@ -64,7 +95,8 @@ def cart(request):
     else:
         items= []
         order = {'get_cart_items':0,'get_cart_total':0}
-    context= {'items':items,'order':order}
+    categories = Category.objects.filter(is_sub =False)
+    context= {'categories':categories,'items':items,'order':order}
     return render(request,'app/cart.html', context)
 def checkout(request):
     if request.user.is_authenticated:
@@ -74,7 +106,8 @@ def checkout(request):
     else:
         items= []
         order = {'get_cart_items':0,'get_cart_total':0}
-    context= {'items':items,'order':order}
+    categories = Category.objects.filter(is_sub =False)
+    context= {'categories':categories,'items':items,'order':order}
     return render(request,'app/checkout.html', context)
 def updateItem(request):
     data= json.loads(request.body)

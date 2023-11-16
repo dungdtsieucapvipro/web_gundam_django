@@ -112,7 +112,7 @@
                     <h5 class="card-title">{{ product.name }}</h5>
                     <hr>
                     <button data-product="{{ product.id }}" data-action="add" class="btn btn-outline-secondary add-btn update-cart">Thêm vào giỏ</button>
-                    <a class="btn btn-outline-success" href="#">Xem</a>
+                    <a class="btn btn-outline-success" href="{% url 'detail' %}?id={{product.id}}">Xem</a>
                     <h4 class="card-text" style="float: right"><strong>${{ product.price | floatformat:2 }}</strong></h4>
                 </div>
             </div>
